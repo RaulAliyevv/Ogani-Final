@@ -24,13 +24,18 @@ namespace OganiWebApp.Areas.Client.Controllers
         {
             var product = _dataContext.Products
                 .Include(p => p.PorductCategory)
+                .Include(p => p.ProductSizes)
                 .AsEnumerable();
 
             if (CategoryId != null)
             {
                 product = product.Where(p => p.PorductCategoryId == CategoryId);
             }
-           
+            
+            if(SizeId != null)
+            {
+                product = product.Where(x => x.ProductSizes.Select(x => x.Id).ToList().Contains((int)SizeId));
+            }
             else if (!string.IsNullOrWhiteSpace(Search))
             {
                 product = product.Where(p => p.Name.Contains(Search) ||
@@ -61,9 +66,9 @@ namespace OganiWebApp.Areas.Client.Controllers
         }
         
         [HttpGet("product-filter", Name = "client-product-filter")]
-        public async Task<IActionResult> FilterAsync(ShopViewModel model, string Search = null)
+        public async Task<IActionResult> FilterAsync(ShopViewModel model, string Search = null,decimal? minPrice = null , decimal?maxPrice = null , int? CategoryId = null , int? SizeId = null)
         {
-            return RedirectToRoute("client-shop-index", new { CategoryId = model.CategoryId,  Search = Search, MaxPrice = model.MaxPrice, MinPrice = model.MinPrice });
+            return RedirectToRoute("client-shop-index", new { CategoryId = CategoryId, SizeId = SizeId, Search = Search, MaxPrice = maxPrice, MinPrice = minPrice });
         }
 
         [HttpPost("product-search", Name = "client-product-search")]
@@ -72,10 +77,27 @@ namespace OganiWebApp.Areas.Client.Controllers
             return RedirectToRoute("client-shop-index", new { Search = Search });
         }
 
-        [HttpGet("item/{}", Name = "client-shop-index")]
+        [HttpGet("item/{id}", Name = "client-shop-item")]
         public async Task<IActionResult> Item(int id)
         {
-
+            var product = _dataContext.Products.Include(x => x.ProductImages).FirstOrDefault(x => x.Id == id);
+            var relatedProducts = _dataContext.Products.Where(x => x.PorductCategoryId == product.PorductCategoryId);
+            if(product == null) return NotFound();
+            var model = new ShopItemViewModel
+            {
+                Id = product.Id,
+                Name = product.Name,
+                MainImageUrl = _fileService.GetFileUrl(product.MainImageNameInFileSystem, Contracts.UploadDirectory.Proudct),
+                Weight = product.Weight,
+                Shipping = product.Shipping,
+                CreatedAt = product.CreatedAt,
+                Description = product.Description,
+                DiscountPrice = product.DiscountPrice,
+                Price = product.Price,
+                Images = product.ProductImages.Select(x => _fileService.GetFileUrl(x.ImageNameInFileSystem, Contracts.UploadDirectory.Proudct)).ToList(),
+                RelatedProducts = relatedProducts.Select(x => new ProductItemViewModel { Id = id, ImageUrl = _fileService.GetFileUrl(x.MainImageNameInFileSystem, Contracts.UploadDirectory.Proudct), Name = x.Name, Price = x.Price }).ToList(),
+            };
+            return View(model); 
         }
     }
 }

@@ -58,5 +58,7 @@ namespace OganiWebApp.Areas.Client.Controllers
 
             return Redirect(Request.Headers["Referer"].ToString());
         }
+
+        
     }
 }

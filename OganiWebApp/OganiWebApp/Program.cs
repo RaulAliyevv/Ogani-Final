@@ -22,7 +22,7 @@ namespace OganiWebApp
                 {
                     o.Cookie.Name = "Identity";
                     o.ExpireTimeSpan = TimeSpan.FromMinutes(50);
-                    o.LoginPath = "/auth/authenticate";
+                    o.LoginPath = "/auth/login";
                     o.AccessDeniedPath = "/admin/auth/login";
                 });
 
@@ -30,6 +30,7 @@ namespace OganiWebApp
             services.AddHttpContextAccessor();
             services.AddMvc();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IBasketService, BasketService>();
             services.AddSingleton<IFileService, FileService>();
 
             var app = builder.Build();
@@ -48,7 +49,7 @@ namespace OganiWebApp
             app.UseRouting();
 
             
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

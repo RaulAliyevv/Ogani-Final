@@ -4,7 +4,7 @@ namespace OganiWebApp.Areas.Client.ViewModels
 {
     public class BlogViewModel
     {
-        public BlogViewModel(int id, string thumbNailImgName, string thumbNailImgUrl, User? user, int blogCategoryId, BlogCategory? blogCategory, string title, string content, DateTime? created)
+        public BlogViewModel(int id, string thumbNailImgName, string thumbNailImgUrl, User? user, int blogCategoryId, BlogCategory? blogCategory, string title, string content, DateTime created)
         {
             Id = id;
             ThumbNailImgName = thumbNailImgName;
@@ -25,6 +25,6 @@ namespace OganiWebApp.Areas.Client.ViewModels
         public BlogCategory? BlogCategory { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
-        public DateTime? Created { get; set; }
+        public DateTime Created { get; set; }
     }
 }

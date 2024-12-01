@@ -58,5 +58,12 @@ namespace OganiWebApp.Areas.Client.Controllers
             return RedirectToRoute("client-auth-login");
 
         }
+        [HttpGet("logout", Name = "client-auth-logout")]
+        public async Task<IActionResult> LogoutAsync()
+        {
+            await _userService.SignOutAsync();
+
+            return RedirectToRoute("client-home-index");
+        }
     }
 }

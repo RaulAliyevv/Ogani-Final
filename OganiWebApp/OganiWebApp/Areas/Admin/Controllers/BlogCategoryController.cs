@@ -39,6 +39,7 @@ namespace OganiWebApp.Areas.Admin.Controllers
             }
             var blogCategory = new BlogCategory { Title = addViewModel.Title, CreatedAt = DateTime.Now };
             _dataContext.BlogCategories.Add(blogCategory);
+            _dataContext.SaveChanges(); 
             return RedirectToRoute("admin-blog-category-list");
         }
 

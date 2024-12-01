@@ -65,11 +65,9 @@ namespace OganiWebApp.Areas.Admin.Controllers
             {
                 Title = model.Title,
                 Content = model.Content,
-                UserId = _userService.CurrentUser.Id,
                 BlogCategoryId = model.BlogCategoryId,
                 ThumbNailImgName = model.Image != null ? model.Image.FileName : default!,
                 ThumbNailImgNameInFileSystem = model.Image != null ? await CreateBlogThumbNailImage() : default!,
-                User = _userService.CurrentUser,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
             };

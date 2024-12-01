@@ -118,6 +118,8 @@ namespace OganiWebApp.Services
                     LastName = model.LastName,
                     Email = model.Email,
                     Password = BC.HashPassword(model.Password),
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
 
                 };
                 await _dataContext.Users.AddAsync(user);
